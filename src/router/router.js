@@ -8,7 +8,22 @@ export default new Router({
         {
             path: '/',
             name: 'Index',
-            component: () => import('../views/Index.vue')
-        }
+            component: () => import('@/views/Index.vue')
+        },
+        {
+            path: '/introduce',
+            name: 'Introduce',
+            component: () => import('@/views/Introduce.vue')
+        },
+        {
+            path: '/range',
+            name: 'Range',
+            component: () => import('@/views/Range.vue')
+        },
+        {
+            path: '/vote',
+            name: 'Vote',
+            component: () => import('@/views/Vote.vue')
+        },
     ]
 })

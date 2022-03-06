@@ -5,8 +5,17 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        openId:'1sf23'
+        openId:'1sf23',
+        bottomActive:0
     },
-    mutations: {},
+    mutations: {
+        setBottomActive (state, active) {
+            // let allowActive = new Set([0,1,2]);
+            // if (false === allowActive.has(active)) {
+            //     active = 0;
+            // }
+            state.bottomActive = active;
+        },
+    },
     actions: {}
 });

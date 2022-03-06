@@ -10,6 +10,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
+        width: 750px;
         color: #2c3e50;
     }
 </style>
