@@ -25,5 +25,12 @@ export default new Router({
             name: 'Vote',
             component: () => import('@/views/Vote.vue')
         },
-    ]
+    ],
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    }
 })

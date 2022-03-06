@@ -5,7 +5,8 @@ import store from './store/store'
 import 'normalize.css';
 import 'lib-flexible';
 import './vant/index';
-import './mock/index';
+
+// import './mock/index';
 
 Vue.config.productionTip = false
 

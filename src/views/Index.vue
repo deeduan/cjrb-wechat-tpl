@@ -16,20 +16,26 @@
             </van-search>
           </div>
 
-          <van-grid :column-num="2" :gutter="14" :border="false">
-            <van-grid-item v-for="value in 7" :key="value">
-              <img v-lazy="default_goods_img" alt="" class="item-image">
-              <div class="grid-item-bottom">
-                <div class="grid-item-bottom-info">
-                  <div>张三</div>
-                  <div>1999票</div>
+          <div v-if="list.length > 0">
+            <van-grid :column-num="2" :gutter="14" :border="false">
+              <van-grid-item v-for="user in list" :key="user.id">
+                <img v-lazy="default_goods_img" alt="" class="item-image">
+                <div class="grid-item-bottom">
+                  <div class="grid-item-bottom-info">
+                    <div>{{user.id}}号</div>
+                    <div>{{user.name}}</div>
+                  </div>
+                  <div class="grid-item-bottom-button" @click="onVote(user)">
+                    投票
+                  </div>
                 </div>
-                <div class="grid-item-bottom-button" @click="onVote">
-                  投票
-                </div>
-              </div>
-            </van-grid-item>
-          </van-grid>
+              </van-grid-item>
+            </van-grid>
+          </div>
+          <div v-else class="no-joiner">
+            还没有任何候选人哦~
+          </div>
+
 <!--          <VoteCard></VoteCard>-->
         </div>
 
@@ -44,6 +50,8 @@
     import default_goods_img from "@/assets/rw.jpeg";
 
     import {tLogin} from "@/api/test";
+    import {init as fInit} from "@/api";
+    import {search} from "@/api";
 
     export default {
         name: "Index",
@@ -51,7 +59,8 @@
           return {
             value: '',
             noteMsg:'请输入搜索关键字',
-            default_goods_img: default_goods_img
+            default_goods_img: default_goods_img,
+            list: []
           };
         },
         components: {
@@ -65,23 +74,65 @@
         },
         methods: {
             init: function () {
-                let that = this;
-                tLogin({user_name:'段正淳'}).then(function (response) {
-                    console.log(response);
-                    return false;
-                });
+
+              /**
+               * 测试mock 的
+               */
+              // let that = this;
+                // tLogin({user_name:'段正淳'}).then(function (response) {
+                //     console.log(response);
+                //     return false;
+                // });
+
+              let that = this;
+              fInit().then(function (response) {
+                  let data = response.data.data;
+                  that.list = data.list;
+                  that.$store.commit('setActiveTime', data.is_active_period);
+                  return false;
+              });
+
             },
             onSearch() {
               if (this.value.length < 1) {
                 this.$toast('请输入搜索关键字');
                 return;
               }
-              this.$toast(this.value);
+
+              let that = this;
+              let requestData = {
+                key_word: that.value
+              };
+
+              search(requestData).then(function (response) {
+
+                let data = response.data.data;
+
+                if (data.list.length === 0) {
+                  that.$toast('查不到结果，请重新搜索~');
+                  return false;
+                }
+
+                that.list = data.list;
+
+                return false;
+              }).catch(e => {
+                console.log(e);
+                that.$toast('查不到结果，请重新搜索!');
+              })
             },
-            onVote() {
+            onVote(user) {
+              if (this.$store.state.activeTime <= 0)  {
+                this.$toast('活动已结束~');
+                return false;
+              }
+
               // 跳转到个人页面
               this.$router.push({
-                path: "/vote"
+                name: "Vote",
+                params: {
+                  user: user
+                }
               });
             }
         }
@@ -139,4 +190,7 @@
     border-radius: 0px 0px 6px 6px !important;
   }
 
+  .no-joiner{
+    padding-top: 60px;
+  }
 </style>

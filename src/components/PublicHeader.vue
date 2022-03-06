@@ -10,9 +10,18 @@
 <script>
 export default {
     name: "PublicHeader",
+    computed: {
+      time: {
+        get: function() {
+          return this.$store.state.activeTime;
+        },
+        set: function(active) {}
+      }
+    },
     data() {
       return {
-        time: 30 * 60 * 60 * 1000,
+        // time: 30 * 60 * 60 * 1000,
+        // time: 1273554000,
       };
     },
 }

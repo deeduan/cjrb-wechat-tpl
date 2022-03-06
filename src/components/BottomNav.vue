@@ -2,7 +2,7 @@
     <div class="bottom-nav-container">
       <van-tabbar v-model="active" @change="onChange">
         <van-tabbar-item icon="home-o">首页</van-tabbar-item>
-        <van-tabbar-item icon="bar-chart-o">排行榜</van-tabbar-item>
+<!--        <van-tabbar-item icon="bar-chart-o">排行榜</van-tabbar-item>-->
         <van-tabbar-item icon="comment-o">活动介绍</van-tabbar-item>
       </van-tabbar>
     </div>
@@ -33,12 +33,12 @@ export default {
         //     path: "/"
         //   });
         //   break;
+        // case 1:
+        //   this.$router.replace({
+        //     path: "/range"
+        //   });
+        //   break;
         case 1:
-          this.$router.replace({
-            path: "/range"
-          });
-          break;
-        case 2:
           this.$router.replace({
             path: "/introduce"
           });

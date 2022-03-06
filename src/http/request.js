@@ -6,6 +6,9 @@
 import axios from 'axios';
 
 
+
+console.log(process.env.NODE_ENV);
+
 /**
  * 创建一个请求server
  *
@@ -13,8 +16,8 @@ import axios from 'axios';
  */
 const service = axios.create({
     // api的基础部分
-    // baseURL: process.env.VUE_APP_API_URL,
-    baseURL: '/api',
+    baseURL: process.env.VUE_APP_API_URL,
+    // baseURL: '/api',
     // 请求超时
     timeout: 30000,
     // 请求头的设置
