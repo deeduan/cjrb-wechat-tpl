@@ -70,7 +70,7 @@
         },
         created: function () {
             this.init();
-            console.log(this.$store.state.openId);
+            // console.log(this.$store.state.openId);
         },
         methods: {
             init: function () {

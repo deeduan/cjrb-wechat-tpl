@@ -6,9 +6,6 @@
 import axios from 'axios';
 
 
-
-console.log(process.env.NODE_ENV);
-
 /**
  * 创建一个请求server
  *
