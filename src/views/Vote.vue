@@ -205,8 +205,21 @@ export default {
         that.$toast('网络繁忙,请稍后再试~');
       });
     },
+    // 非活动期
+    isActivePeriod() {
+      if (this.$store.state.activeTime <= 0)  {
+        this.$toast('活动已结束~');
+        return false;
+      }
+      return true;
+    },
     // 发送短信验证码
     sendSmsCode() {
+
+      if (false === this.isActivePeriod()) {
+        return ;
+      }
+
       let that = this;
       that.smsBtnDisable = true;
       let tel = that.tel;
@@ -264,6 +277,10 @@ export default {
     },
 
     submitVote() {
+
+      if (false === this.isActivePeriod()) {
+        return ;
+      }
 
       this.is_disable = true;
 
@@ -340,6 +357,14 @@ export default {
           that.$toast('该窗口今日已达获取票数上限~');
           that.is_disable = false;
           return false;
+        } else if (data.code === 102) {
+          that.$toast('验证码错误~');
+          that.is_disable = false;
+          return false
+        } else if (data.code === 103) {
+          that.$toast('活动已截止~');
+          that.is_disable = false;
+          return false
         } else {
           that.$toast('网络繁忙，请稍后再试~');
           that.is_disable = false;
