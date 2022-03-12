@@ -24,3 +24,8 @@ Vue.use(RadioGroup);
 import { Cell, CellGroup, Icon} from "vant";
 Vue.use(Cell);
 Vue.use(CellGroup).use(Icon);
+
+import { Collapse, CollapseItem } from 'vant';
+
+Vue.use(Collapse);
+Vue.use(CollapseItem);

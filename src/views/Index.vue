@@ -25,7 +25,7 @@
                     <div>{{user.id}}号</div>
                     <div>{{user.name}}</div>
                   </div>
-                  <div class="grid-item-bottom-button" @click="onVote(user)">
+                  <div class="grid-item-bottom-button" @click="onVote(user.id)">
                     投票
                   </div>
                 </div>
@@ -33,7 +33,7 @@
             </van-grid>
           </div>
           <div v-else class="no-joiner">
-            还没有任何候选人哦~
+            还没有任何候选窗口哦~
           </div>
 
 <!--          <VoteCard></VoteCard>-->
@@ -58,7 +58,7 @@
         data() {
           return {
             value: '',
-            noteMsg:'请输入搜索关键字',
+            noteMsg:'请输入窗口编号',
             default_goods_img: default_goods_img,
             list: []
           };
@@ -90,12 +90,22 @@
                   that.list = data.list;
                   that.$store.commit('setActiveTime', data.is_active_period);
                   return false;
+              }).catch(e => {
+                console.log(e);
+                that.$toast('网络繁忙,请稍后再试~');
               });
 
             },
             onSearch() {
               if (this.value.length < 1) {
-                this.$toast('请输入搜索关键字');
+                this.$toast('请输入窗口编号');
+                return;
+              }
+
+              // 检验输入是否为数字
+              let pattern = /^\d+$/;
+              if (!pattern.test(this.value)) {
+                this.$toast('格式不正确，请输入窗口编号！');
                 return;
               }
 
@@ -118,20 +128,21 @@
                 return false;
               }).catch(e => {
                 console.log(e);
-                that.$toast('查不到结果，请重新搜索!');
+                that.$toast('网络繁忙,请稍后再试~');
               })
             },
-            onVote(user) {
+            onVote(id) {
               if (this.$store.state.activeTime <= 0)  {
                 this.$toast('活动已结束~');
                 return false;
               }
 
+              console.log(id);
               // 跳转到个人页面
               this.$router.push({
                 name: "Vote",
                 params: {
-                  user: user
+                  id
                 }
               });
             }
@@ -171,6 +182,7 @@
     align-items: flex-start;
     justify-content: space-between;
     padding: 8px;
+    background-color: #FBF6F9;
   }
 
   .grid-item-bottom-info div{

@@ -21,7 +21,7 @@ export default new Router({
             component: () => import('@/views/Range.vue')
         },
         {
-            path: '/vote',
+            path: '/vote/:id',
             name: 'Vote',
             component: () => import('@/views/Vote.vue')
         },

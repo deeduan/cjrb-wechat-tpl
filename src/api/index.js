@@ -32,6 +32,30 @@ export function init() {
     })
 }
 
+/**
+ * 排名
+ *
+ * @returns {*}
+ */
+export function range() {
+    return request({
+        url: '/range',
+        method: 'get'
+    })
+}
+
+/**
+ * 获取单个用户
+ *
+ * @param u_id
+ * @returns {*}
+ */
+export function user(u_id) {
+    return request({
+        url: '/user/'+u_id,
+        method: 'get'
+    })
+}
 
 /**
  * 搜索
@@ -58,6 +82,21 @@ export function vote(requestData) {
     let data = stringify(requestData);
     return request({
         url: '/vote',
+        method: 'post',
+        data
+    })
+}
+
+/**
+ * 发送短信
+ *
+ * @param requestData
+ * @returns {*}
+ */
+export function sms(requestData) {
+    let data = stringify(requestData);
+    return request({
+        url: '/sendSms',
         method: 'post',
         data
     })

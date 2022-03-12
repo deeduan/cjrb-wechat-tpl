@@ -3,21 +3,16 @@
     <PublicHeader></PublicHeader>
       <div class="range">
         <ul>
-          <li class="number-1">
-            <div class="range-base"><span>1</span><span>张三</span></div>
-            <div class="range-tickets">1000<span>票</span></div>
-          </li>
-          <li class="number-2">
-            <div class="range-base"><span>1</span><span>张三</span></div>
-            <div class="range-tickets">1000<span>票</span></div>
-          </li>
-          <li class="number-3">
-            <div class="range-base"><span>1</span><span>张三</span></div>
-            <div class="range-tickets">1000<span>票</span></div>
-          </li>
-          <li class="number-normal">
-            <div class="range-base"><span>1</span><span>张三</span></div>
-            <div class="range-tickets">1000<span>票</span></div>
+          <div>
+
+          </div>
+          <li
+              class="number-normal"
+              v-for="(item, index) in list"
+              v-bind:class="[(new Set([0,1,2])).has(index) ? 'number-'+index : '']"
+          >
+            <div class="range-base"><span>{{ index+ 1}}</span><span>{{item.name}}</span></div>
+            <div class="range-tickets">{{item.tickets}}<span>票</span></div>
           </li>
         </ul>
       </div>
@@ -29,18 +24,42 @@
 
 import PublicHeader from "@/components/PublicHeader";
 import BottomNav from "@/components/BottomNav";
+import {range} from "@/api";
+import default_goods_img from "@/assets/rw.jpeg";
 
 export default {
   name: "Range",
   components: {
     PublicHeader,
     BottomNav
+  },
+  data() {
+    return {
+      list: [],
+      rangeTop3: new Set([0,1,2])
+    };
+  },
+  mounted() {
+    let that = this;
+    range().then(function (response) {
+      let data = response.data;
+      if (data.data.length > 0) {
+        that.list = data.data;
+      }
+      return false;
+    }).catch(e => {
+      console.log(e);
+      that.$toast('网络繁忙,请稍后再试~');
+    });
   }
 }
 </script>
 
 <style scoped>
 
+  .range-container{
+    padding-bottom: 100px;
+  }
   ul{
     padding: 20px;
   }
@@ -57,18 +76,18 @@ export default {
     margin-bottom: 10px;
   }
 
+  .number-0{
+    background-color: #FA3773 !important;
+    color: white;
+  }
+
   .number-1{
-    background-color: #FA3773;
+    background-color: #FB9A3A !important;
     color: white;
   }
 
   .number-2{
-    background-color: #FB9A3A;
-    color: white;
-  }
-
-  .number-3{
-    background-color: #38B0FE;
+    background-color: #38B0FE !important;
     color: white;
   }
 
