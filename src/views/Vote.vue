@@ -21,7 +21,9 @@
       <img :src="posterImg" v-if="posterImg" class="dialog-img">
     </van-dialog>
 
-    <div class="posterHtml" id="posterHtml" v-show="false" :style="{backgroundImage: 'url('+share_background_img+')'}">
+<!--    <div class="posterHtml" id="posterHtml" v-show="true" :style="{backgroundImage: 'url('+share_background_img+')'}">-->
+    <div class="posterHtml" id="posterHtml" v-show="false">
+      <img :src="share_background_img" alt="">
       <!-- 二维码 -->
       <div class="qrcode">
         <div id="qrcodeImg" ref="qrcodeImg" class="qrcodeImg"></div>
@@ -338,7 +340,7 @@ export default {
           that.$dialog.confirm({
             title: '投票成功',
             cancelButtonText:'返回主页',
-            confirmButtonText:'分享',
+            confirmButtonText:'分享助力',
             message: '感谢您的参与, 点击分享为窗口生成海报宣传助力吧~',
           }).then(() => {
               that.share();
@@ -380,7 +382,10 @@ export default {
     },
     share() {
       this.createPoster();
-      this.dialog_show = true;
+      let that = this;
+      setTimeout(function () {
+        that.dialog_show = true;
+      }, 1000);
     },
     createPoster() {
       // 生成海报
@@ -541,7 +546,7 @@ img {
   background-attachment: fixed;
   background-size: contain;
 
-  margin-bottom: 100px;
+  //margin-bottom: 100px;
 }
 
 .qrcodeImg{
@@ -555,7 +560,7 @@ img {
 }
 
 .qrcode{
-  padding-top: 500px;
+  padding-top: 20px;
 }
 
 .poser-notice{

@@ -20,12 +20,12 @@
             <van-grid :column-num="2" :gutter="14" :border="false">
               <van-grid-item v-for="user in list" :key="user.id">
                 <img v-lazy="default_goods_img" alt="" class="item-image">
-                <div class="grid-item-bottom">
+                <div class="grid-item-bottom" @click="onVote(user.id)">
                   <div class="grid-item-bottom-info">
                     <div>{{user.id}}号</div>
                     <div>{{user.name}}</div>
                   </div>
-                  <div class="grid-item-bottom-button" @click="onVote(user.id)">
+                  <div class="grid-item-bottom-button">
                     投票
                   </div>
                 </div>
