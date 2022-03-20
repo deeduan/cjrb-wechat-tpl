@@ -8,7 +8,8 @@ export default new Vuex.Store({
         openId:'1sf23',
         bottomActive:0,
         activeTime:0,
-        currentUid:0
+        currentUid:0,
+        c_id:1
     },
     mutations: {
         setBottomActive (state, active) {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
         },
         setCurrentUid (state, id) {
             state.currentUid = id;
+        },
+        setCid (state, id) {
+            state.c_id = id;
         },
     },
     actions: {}

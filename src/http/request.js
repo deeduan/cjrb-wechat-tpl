@@ -6,6 +6,7 @@
 import axios from 'axios';
 
 
+
 /**
  * 创建一个请求server
  *
@@ -27,7 +28,7 @@ const service = axios.create({
  * 临时的跨域凭证是否携带
  * @type {boolean}
  */
-service.defaults.withCredentials = true;
+service.defaults.withCredentials = false;
 
 /**
  * http请求拦截器

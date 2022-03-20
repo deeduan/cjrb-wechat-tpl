@@ -1,13 +1,13 @@
 // vue.config.js
 module.exports = {
-    // 配置代理服务器
+    // 配置代理服务器 跟env下本地代理一起开启可使用
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://zwzx.vote.com/',
+                target: 'http://voteme.joycegrils.com/',
                 ws: false,
                 changeOrigin: true,
-                pathRewrite: { '^/api': '' },
+                // pathRewrite: { '^/api': '' },
             }
         }
     },

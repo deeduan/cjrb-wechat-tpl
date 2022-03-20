@@ -12,7 +12,7 @@
               v-bind:class="[(new Set([0,1,2])).has(index) ? 'number-'+index : '']"
           >
             <div class="range-base"><span>{{ index+ 1}}</span><span>{{item.name}}</span></div>
-            <div class="range-tickets">{{item.tickets}}<span>票</span></div>
+            <div class="range-tickets">{{item.upvote}}<span>票</span></div>
           </li>
         </ul>
       </div>
@@ -41,11 +41,21 @@ export default {
   },
   mounted() {
     let that = this;
-    range().then(function (response) {
+    let param = {
+        ci:that.$store.state.c_id
+    };
+    range(param).then(function (response) {
       let data = response.data;
-      if (data.data.length > 0) {
-        that.list = data.data;
+
+      if (data.hasOwnProperty('code')) {
+        that.$toast('网络繁忙,请稍后再试!');
+        return false;
       }
+
+      if (data.length > 0) {
+        that.list = data;
+      }
+
       return false;
     }).catch(e => {
       console.log(e);

@@ -27,8 +27,11 @@ export function dataList(requestData) {
  */
 export function init() {
     return request({
-        url: '/init',
-        method: 'get'
+        url: '/campaign',
+        method: 'get',
+        params: {
+            ci: 1
+        },
     })
 }
 
@@ -37,10 +40,12 @@ export function init() {
  *
  * @returns {*}
  */
-export function range() {
+export function range(param) {
+    console.log(param);
     return request({
-        url: '/range',
-        method: 'get'
+        url: '/top',
+        method: 'get',
+        params: param,
     })
 }
 
@@ -52,8 +57,11 @@ export function range() {
  */
 export function user(u_id) {
     return request({
-        url: '/user/'+u_id,
-        method: 'get'
+        url: '/item',
+        method: 'get',
+        params: {
+            ii: u_id
+        },
     })
 }
 
@@ -64,24 +72,23 @@ export function user(u_id) {
  * @returns {*}
  */
 export function search(requestData) {
-    let data = stringify(requestData);
     return request({
         url: '/search',
-        method: 'post',
-        data
+        method: 'get',
+        params:requestData
     })
 }
 
 /**
  * 投票
- *
+ *  /api/item?code={wx_user_code}&ci={campaign_id}
  * @param requestData
  * @returns {*}
  */
-export function vote(requestData) {
+export function vote(requestData, c_id) {
     let data = stringify(requestData);
     return request({
-        url: '/vote',
+        url: '/item?ci='+c_id,
         method: 'post',
         data
     })
@@ -94,10 +101,15 @@ export function vote(requestData) {
  * @returns {*}
  */
 export function sms(requestData) {
-    let data = stringify(requestData);
+    // let data = stringify(requestData);
+    // console.log(requestData);
     return request({
-        url: '/sendSms',
+        url: '/verify/sms',
         method: 'post',
         data
     })
 }
+
+
+// http://voteme.joycegrils.com/api/verify/sms
+// http://voteme.joycegrils.com/api/item?ci=1

@@ -19,10 +19,10 @@
           <div v-if="list.length > 0">
             <van-grid :column-num="2" :gutter="14" :border="false">
               <van-grid-item v-for="user in list" :key="user.id">
-                <img v-lazy="default_goods_img" alt="" class="item-image">
+                <img v-lazy="user.creatives[0].curl" alt="" class="item-image">
                 <div class="grid-item-bottom" @click="onVote(user.id)">
                   <div class="grid-item-bottom-info">
-                    <div>{{user.id}}号</div>
+                    <div>{{user.no}}号</div>
                     <div>{{user.name}}</div>
                   </div>
                   <div class="grid-item-bottom-button">
@@ -60,7 +60,8 @@
             value: '',
             noteMsg:'请输入窗口编号',
             default_goods_img: default_goods_img,
-            list: []
+            list: [],
+            c_id:0,
           };
         },
         components: {
@@ -86,9 +87,20 @@
 
               let that = this;
               fInit().then(function (response) {
-                  let data = response.data.data;
-                  that.list = data.list;
-                  that.$store.commit('setActiveTime', data.is_active_period);
+                  let data = response.data;
+
+                if (data.hasOwnProperty('code')) {
+                  that.$toast('网络忙，请稍后再试！');
+                  return false;
+                }
+
+                  if (data.hasOwnProperty('ttl')) {
+                    let ttl = data.ttl * 1000;
+                    that.$store.commit('setActiveTime', ttl);
+                    that.list = data.items;
+                    that.$store.commit('setCid', that.list[0].campaign_id);
+                  }
+
                   return false;
               }).catch(e => {
                 console.log(e);
@@ -111,19 +123,20 @@
 
               let that = this;
               let requestData = {
-                key_word: that.value
+                ci: that.$store.state.c_id,
+                kw: that.value
               };
 
               search(requestData).then(function (response) {
 
-                let data = response.data.data;
-
-                if (data.list.length === 0) {
+                let data = response.data;
+                    
+                if (data.hasOwnProperty('code')) {
                   that.$toast('查不到结果，请重新搜索~');
                   return false;
                 }
 
-                that.list = data.list;
+                that.list = data;
 
                 return false;
               }).catch(e => {

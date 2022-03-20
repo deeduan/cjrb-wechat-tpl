@@ -44,4 +44,8 @@ export default {
     transform: translateX(-50%);
   }
 
+  .van-count-down{
+    color:white !important;
+  }
+
 </style>

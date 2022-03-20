@@ -1,6 +1,5 @@
 <template>
   <div class="vote-container">
-
     <div class="return" @click="returnHome">
       返回
     </div>
@@ -32,11 +31,11 @@
     </div>
 
     <div v-if="user.err === 1" class="no-user">
-      暂无候选人,请点击左上角返回重新选择。
+      暂无候选窗口,请点击左上角返回重新选择。
     </div>
     <div v-else>
       <div class="join-window">
-        <img v-lazy="default_goods_img" alt="" class="item-image">
+        <img v-lazy="user.creatives[0].curl" alt="" class="item-image">
       </div>
 
       <div class="base-info">
@@ -44,32 +43,31 @@
           {{ user.name }}
         </div>
         <div class="u-unit">
-          好评数： {{ user.t_hp }},
-          差评数： {{ user.t_cp }}
+          好评数： {{ user.upvote }},
+          差评数： {{ user.downvote }}
         </div>
       </div>
 
       <div class="vote-info-3">
         <div class="vote-info-ruler-notice">
-          选项说明
+          测评内容
         </div>
 
         <div class="vote-info-ruler-item">
           <van-collapse v-model="activeName" accordion>
-            <van-collapse-item title="责任落实方面" name="1"><span class="span-ruler-notice">各窗口</span>是否履行行政审批和政务服务主体责任、监管责任情况，是否及时学习传达、研究部署关于推进审批服务便民化、“放管服”改革和“一件事一次办”改革、优化营商环境，以及“清廉大厅”建设工作安排；是否建立健全政务服务大厅全过程监督、问效和考核评价等工作机制；是否结合实际制定措施办法，加强对中介机构的监督管理等。
+            <van-collapse-item title="工作作风方面" name="1">
+              窗口工作人员在行政审批和政务服务中是否存在<span class="span-ruler-notice">不作为、慢作为、乱作为、假作为等形式主义官僚主义问题，是否存在业务不精、推诿扯皮、态度生硬、服务不优、慵懒散拖等问题；是否存在落实首问责任制、一次性告知制、限时办结制等有关规定不力，让企业群众多头跑、重复跑等问题；是否存在审批事项虚进、假进服务大厅，搞“两头受理”“体外循环”“隐性审批”，致使办事效率低下、群众满意度不高等问题。</span>
             </van-collapse-item>
-            <van-collapse-item title="工作作风方面" name="2">
-              窗口工作人员在行政审批和政务服务中是否存在不作为、慢作为、乱作为、假作为等形式主义官僚主义问题，是否存在业务不精、推诿扯皮、态度生硬、服务不优、慵懒散拖等问题；是否存在落实首问责任制、一次性告知制、限时办结制等有关规定不力，让企业群众多头跑、重复跑等问题；是否存在审批事项虚进、假进服务大厅，搞“两头受理”“体外循环”“隐性审批”，致使办事效率低下、群众满意度不高等问题。
+            <van-collapse-item title="违纪违法方面" name="2">
+              窗口工作人员在行政审批、政务服务中是否遵纪守法，是否存在<span class="span-ruler-notice">违规增设行政审批事项、增加受理条件和办理环节、要求开具“奇葩证明”等违规问题；是否存在“吃拿卡要”和“提篮子”“打牌子”“拉款子”以及勾结黑中介，设置“门槛”、暗箱操作、利益输送、权力寻租问题，或帮助有利益关联的中介机构或人员违规操作、进行有偿代理等“窗口腐败”问题。</span>
             </van-collapse-item>
-            <van-collapse-item title="违纪违法方面" name="3">
-              窗口工作人员在行政审批、政务服务中是否遵纪守法，是否存在违规增设行政审批事项、增加受理条件和办理环节、要求开具“奇葩证明”等违规问题；是否存在“吃拿卡要”和“提篮子”“打牌子”“拉款子”以及勾结黑中介，设置“门槛”、暗箱操作、利益输送、权力寻租问题，或帮助有利益关联的中介机构或人员违规操作、进行有偿代理等“窗口腐败”问题。
+            <van-collapse-item title="责任落实方面" name="3">各窗口是否履行行政审批和政务服务主体责任、监管责任情况，是否及时学习传达、研究部署关于推进审批服务便民化、“放管服”改革和“一件事一次办”改革、优化营商环境，以及“清廉大厅”建设工作安排；是否建立健全政务服务大厅全过程监督、问效和考核评价等工作机制；是否结合实际制定措施办法，加强对中介机构的监督管理等。
             </van-collapse-item>
           </van-collapse>
         </div>
 
 
       </div>
-
 
       <div class="vote-field">
 
@@ -114,17 +112,20 @@
             type="textarea"
             placeholder="具体事由"
         />
-
-      </div>
-
-      <div class="vote-submit">
-        <van-button :disabled=is_disable type="primary" size="large" @click="submitVote">提交</van-button>
       </div>
     </div>
+
+        <div class="tttttt" v-show="nc_show">
+          <div id="nc"></div>
+        </div>
+      <div class="vote-submit" v-if="user.err !== 1">
+        <van-button :disabled=is_disable type="primary" size="large" @click="submitVote">提交</van-button>
+      </div>
 
 
   </div>
 </template>
+<script src="https://g.alicdn.com/AWSC/AWSC/awsc.js"></script>
 
 <script>
 // 生成海报
@@ -157,13 +158,16 @@ export default {
     }
   },
   mounted() {
+    window.nc = null;
     // 生成二维码
     // window.location.href
     let path = process.env.NODE_ENV === "development" ? "http://www.baidu.com" : window.location.href;
     this.createQrcode(path);
+    let that = this;
   },
   data() {
     return {
+      nc_show:true,
       is_disable: false,
       default_goods_img: default_goods_img,
       share_background_img: share_background_img,
@@ -182,9 +186,57 @@ export default {
       stillSetInterval: true,
       posterImg: '', // 最终生成的海报图片
       dialog_show:false,
+      sessionId:'',
+      sig:'',
+      token:'',
+      nc: null,
+      aliCheckShow: false
     };
   },
   methods: {
+    aliSmsCheck() {
+      let that = this;
+      // 实例化nc
+      AWSC.use("nc", function (state, module) {
+          // 初始化
+          window.nc = module.init({
+              // 应用类型标识。它和使用场景标识（scene字段）一起决定了滑动验证的业务场景与后端对应使用的策略模型。您可以在阿里云验证码控制台的配置管理页签找到对应的appkey字段值，请务必正确填写。
+              appkey: "FFFF0N0000000000A8FC",
+              //使用场景标识。它和应用类型标识（appkey字段）一起决定了滑动验证的业务场景与后端对应使用的策略模型。您可以在阿里云验证码控制台的配置管理页签找到对应的scene值，请务必正确填写。
+              scene: "nc_message_h5",
+              // 声明滑动验证需要渲染的目标ID。
+              renderTo: "nc",
+              hideErrorCode: true,
+              // test: module.TEST_BLOCK, // 测试滑动失败状态
+              //前端滑动验证通过时会触发该回调参数。您可以在该回调参数中将会话ID（sessionId）、签名串（sig）、请求唯一标识（token）字段记录下来，随业务请求一同发送至您的服务端调用验签。
+              success: function (data) {
+                  // console.log("sessionId");
+                  // console.log(data.sessionId);
+                  //                   console.log("sig");
+                  // console.log(data.sig);
+                  //                   console.log("token");
+                  // console.log(data.token);
+                  // window.console && console.log(data.sessionId)
+                  // window.console && console.log(data.sig)
+                  // window.console && console.log(data.token)
+
+                  that.sessionId = data.sessionId;
+                  that.sig = data.sig;
+                  that.token = data.token;
+              },
+              // 滑动验证失败时触发该回调参数。
+              fail: function (failCode) {
+                  console.log("failCode");
+                   window.console && console.log(failCode)
+              },
+              // 验证码加载出现异常时触发该回调参数。
+              error: function (errorCode) {
+                console.log("errorCode");
+                window.console && console.log(errorCode)
+              }
+          });
+      })
+    },
     shareDialogConfirm() {
         this.returnHome();
     },
@@ -197,12 +249,25 @@ export default {
       let that = this;
       user(u_id).then(function (response) {
         let data = response.data;
-        if (data.code === 0) {
-          that.user = data.data;
-          that.$store.commit('setActiveTime', data.data.is_active_period);
+
+        if (data.hasOwnProperty('code')) {
+          that.nc_show = false;
+          that.$toast('网络忙，请稍后再试！');
+          return false;
         }
+        that.nc_show = true;
+        if (data.hasOwnProperty('ttl')) {
+          let ttl = data.ttl * 1000;
+          that.$store.commit('setActiveTime', ttl);
+
+          that.$store.commit('setActiveTime', ttl);
+          that.user = data.item;
+        }
+
+        that.aliSmsCheck();
         return false;
       }).catch(e => {
+        that.nc_show = false;
         console.log(e);
         that.$toast('网络繁忙,请稍后再试~');
       });
@@ -222,8 +287,20 @@ export default {
         return ;
       }
 
+
       let that = this;
       that.smsBtnDisable = true;
+
+      if (
+            that.sessionId.length === 0 || 
+            that.sig.length === 0 || 
+            that.token.length === 0
+        ) {
+          that.$toast('请先滑动进行验证~');
+          that.smsBtnDisable = false;
+          return;
+      }
+
       let tel = that.tel;
       if (!(/^1[3456789]\d{9}$/.test(tel))) {
         that.$toast('手机号格式不正确~');
@@ -232,14 +309,18 @@ export default {
       }
 
       let requestData = {
-        tel: that.tel
+        sessionId:that.sessionId,
+        sig:that.sig,
+        token:that.token,
+        ci:that.$store.state.c_id,
+        code:123,
+        phone:that.tel
       };
 
       sms(requestData).then(function (response) {
         let data = response.data;
-
-        if (data.data.is_lock === true) {
-          that.$toast('您今日获取验证码次数已达上限~');
+        if (data.code !== 200) {
+          that.$toast(data.msg);
           that.smsBtnDisable = false;
           that.stillSetInterval = false;
           return false;
@@ -252,6 +333,8 @@ export default {
         }
       }).catch(e => {
         console.log(e);
+        that.resetNcData();
+        window.nc.reset();
         that.smsBtnDisable = false;
         that.$toast('网络繁忙，请稍后再试!');
       })
@@ -277,7 +360,11 @@ export default {
         }
       }
     },
-
+    resetNcData() {
+        this.sessionId = '';
+        this.sig = '';
+        this.token = '';
+    },
     submitVote() {
 
       if (false === this.isActivePeriod()) {
@@ -286,14 +373,18 @@ export default {
 
       this.is_disable = true;
 
-      // 参数检查也在这里做了算了
-      if (this.$store.state.activeTime <= 0) {
-        this.$toast('活动已结束~');
-        this.is_disable = false;
-        return false;
+      let that = this;
+
+      if (
+            that.sessionId.length === 0 || 
+            that.sig.length === 0 || 
+            that.token.length === 0
+        ) {
+          that.$toast('请先滑动进行验证~');
+          this.is_disable = false;
+          return;
       }
 
-      let that = this;
       let type = parseInt(that.radio);
       let tel = that.tel;
       let message = that.message;
@@ -318,25 +409,25 @@ export default {
         return;
       }
 
-      if (message.length === 0) {
+      if (type === 2 && message.length === 0) {
         that.$toast('请填写具体事由~');
         that.is_disable = false;
         return;
       }
 
       let requestData = {
-        id: that.user.id,
+        ids: [that.user.id],
         type: type,
-        tel: that.tel,
+        phone: that.tel,
         message: that.message,
-        sms: that.sms,
+        vcode: that.sms,
       };
 
       // 投票
-      vote(requestData).then(function (response) {
+      vote(requestData, that.$store.state.c_id).then(function (response) {
         let data = response.data;
 
-        if (data.code === 0) {
+        if (data.code === 200) {
           that.$dialog.confirm({
             title: '投票成功',
             cancelButtonText:'返回主页',
@@ -351,30 +442,18 @@ export default {
               });
           });
           return false;
-        } else if (data.code === 100) {
-          that.$toast('您今天已经投过票了~');
-          that.is_disable = false;
-          return false;
-        } else if (data.code === 101) {
-          that.$toast('该窗口今日已达获取票数上限~');
-          that.is_disable = false;
-          return false;
-        } else if (data.code === 102) {
-          that.$toast('验证码错误~');
-          that.is_disable = false;
-          return false
-        } else if (data.code === 103) {
-          that.$toast('活动已截止~');
-          that.is_disable = false;
-          return false
         } else {
-          that.$toast('网络繁忙，请稍后再试~');
+          that.$toast(data.msg);
           that.is_disable = false;
         }
 
+        that.resetNcData();
+        window.nc.reset();
         return false;
       }).catch(e => {
         console.log(e);
+        that.resetNcData();
+        window.nc.reset();
         that.is_disable = false;
         that.$toast('网络繁忙，请稍后再试!');
       })
@@ -571,4 +650,23 @@ img {
 .dialog-img{
   padding-top: 20px;
 }
+
+.tttttt{
+  position: relative;
+  width:600px !important;
+  margin: 0 auto;
+  padding-bottom: 60px;
+    padding-top: 10px;
+    // z-index:99999;
+    // background-color: #E8E8E8;
+}
+
+.nc-container .nc_wrapper{
+  width: 100% !important;
+}
+
+.nc-container #nc_1_wrapper{
+    width: 100% !important;
+}
+
 </style>
