@@ -116,7 +116,7 @@
             v-model="gpitem"
             rows="1"
             autosize
-            label="事项"
+            label="期望关注的高频事项"
             type="textarea"
             placeholder="期望高频事项"
         />
@@ -306,8 +306,8 @@ export default {
       }
 
       if (
-            that.sessionId.length === 0 || 
-            that.sig.length === 0 || 
+            that.sessionId.length === 0 ||
+            that.sig.length === 0 ||
             that.token.length === 0
         ) {
           that.$toast('请先滑动进行验证~');
@@ -402,8 +402,8 @@ export default {
       }
 
       if (
-            that.sessionId.length === 0 || 
-            that.sig.length === 0 || 
+            that.sessionId.length === 0 ||
+            that.sig.length === 0 ||
             that.token.length === 0
         ) {
           that.$toast('请先滑动进行验证~');
