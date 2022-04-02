@@ -40,11 +40,11 @@
 
       <div class="base-info">
         <div class="u-name">
-          {{ user.name }}
+          {{ user.name }}窗口
         </div>
         <div class="u-unit">
-          好评数： {{ user.upvote }},
-          差评数： {{ user.downvote }}
+          好评数： {{ user.upvotes }},
+          差评数： {{ user.downvotes }}
         </div>
       </div>
 
@@ -112,6 +112,14 @@
             type="textarea"
             placeholder="具体事由"
         />
+        <van-field
+            v-model="gpitem"
+            rows="1"
+            autosize
+            label="事项"
+            type="textarea"
+            placeholder="期望高频事项"
+        />
       </div>
     </div>
 
@@ -134,7 +142,6 @@ import html2canvas from 'html2canvas';
 import QRCode from 'qrcodejs2';
 
 import PublicHeader from "@/components/PublicHeader";
-import default_goods_img from "@/assets/rw.jpeg";
 import share_background_img from "@/assets/header.jpeg";
 import {user, vote, sms} from "@/api";
 
@@ -169,11 +176,11 @@ export default {
     return {
       nc_show:true,
       is_disable: false,
-      default_goods_img: default_goods_img,
       share_background_img: share_background_img,
       sms: '',
       tel: '',
       message: '',
+      gpitem:'',
       radio: '1',
       user: {
         'err': 1
@@ -291,6 +298,13 @@ export default {
       let that = this;
       that.smsBtnDisable = true;
 
+      let tel = that.tel;
+      if (!(/^1[3456789]\d{9}$/.test(tel))) {
+        that.$toast('手机号格式不正确~');
+        that.smsBtnDisable = false;
+        return false;
+      }
+
       if (
             that.sessionId.length === 0 || 
             that.sig.length === 0 || 
@@ -301,19 +315,11 @@ export default {
           return;
       }
 
-      let tel = that.tel;
-      if (!(/^1[3456789]\d{9}$/.test(tel))) {
-        that.$toast('手机号格式不正确~');
-        that.smsBtnDisable = false;
-        return false;
-      }
-
       let requestData = {
-        sessionId:that.sessionId,
+        session:that.sessionId,
         sig:that.sig,
         token:that.token,
         ci:that.$store.state.c_id,
-        code:123,
         phone:that.tel
       };
 
@@ -323,6 +329,8 @@ export default {
           that.$toast(data.msg);
           that.smsBtnDisable = false;
           that.stillSetInterval = false;
+          that.resetNcData();
+          window.nc.reset();
           return false;
         } else {
           that.$toast('验证码已发送至您的手机,请注意查收~');
@@ -343,7 +351,7 @@ export default {
       let countDown = 60;
 
       function set60time(obj) {
-        console.log(countDown);
+        // console.log(countDown);
 
         if (countDown <= 0) {
           if (obj.interval !== 0) {
@@ -375,16 +383,6 @@ export default {
 
       let that = this;
 
-      if (
-            that.sessionId.length === 0 || 
-            that.sig.length === 0 || 
-            that.token.length === 0
-        ) {
-          that.$toast('请先滑动进行验证~');
-          this.is_disable = false;
-          return;
-      }
-
       let type = parseInt(that.radio);
       let tel = that.tel;
       let message = that.message;
@@ -403,6 +401,16 @@ export default {
         return false;
       }
 
+      if (
+            that.sessionId.length === 0 || 
+            that.sig.length === 0 || 
+            that.token.length === 0
+        ) {
+          that.$toast('请先滑动进行验证~');
+          this.is_disable = false;
+          return;
+      }
+
       if (type === 2 && sms.length === 0) {
         that.$toast('请填写短信验证码~');
         that.is_disable = false;
@@ -419,8 +427,8 @@ export default {
         ids: [that.user.id],
         type: type,
         phone: that.tel,
-        message: that.message,
-        vcode: that.sms,
+        message: that.message+"shixiang999@|"+that.gpitem,
+        vcode: that.sms
       };
 
       // 投票

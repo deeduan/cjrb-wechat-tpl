@@ -3,6 +3,12 @@
         <PublicHeader></PublicHeader>
 
         <div class="list-container">
+          <van-dialog v-model="showBigImage" title=" ">
+            <div class="big-img">
+                          <img :src="bigImageUrl" />
+            </div>
+
+          </van-dialog>
           <div class="u-search">
             <van-search
                 v-model="value"
@@ -19,11 +25,15 @@
           <div v-if="list.length > 0">
             <van-grid :column-num="2" :gutter="14" :border="false">
               <van-grid-item v-for="user in list" :key="user.id">
-                <img v-lazy="user.creatives[0].curl" alt="" class="item-image">
+                <!-- <img v-lazy="user.creatives[0].curl" alt="" class="item-image"> -->
+
+                <div class="item-image-container" @click="clickShowBig(user.creatives[0].curl)">
+                    <img v-lazy="user.creatives[0].curl" alt="" class="item-image">
+                </div>
                 <div class="grid-item-bottom" @click="onVote(user.id)">
                   <div class="grid-item-bottom-info">
-                    <div>{{user.no}}号</div>
-                    <div>{{user.name}}</div>
+                    <div>{{user.item_no}}号</div>
+                    <div>{{user.name}}窗口</div>
                   </div>
                   <div class="grid-item-bottom-button">
                     投票
@@ -34,6 +44,7 @@
           </div>
           <div v-else class="no-joiner">
             还没有任何候选窗口哦~
+            <van-button plain hairline type="info" size="small" @click="init()">刷新</van-button>
           </div>
 
 <!--          <VoteCard></VoteCard>-->
@@ -47,7 +58,7 @@
     import PublicHeader from "@/components/PublicHeader";
     import BottomNav from "@/components/BottomNav";
     import VoteCard from "@/components/VoteCard";
-    import default_goods_img from "@/assets/rw.jpeg";
+    // import default_goods_img from "@/assets/rw1.jpg";
 
     import {tLogin} from "@/api/test";
     import {init as fInit} from "@/api";
@@ -59,9 +70,11 @@
           return {
             value: '',
             noteMsg:'请输入窗口编号',
-            default_goods_img: default_goods_img,
+            // default_goods_img: default_goods_img,
             list: [],
             c_id:0,
+            showBigImage: false,
+            bigImageUrl:''
           };
         },
         components: {
@@ -74,6 +87,10 @@
             // console.log(this.$store.state.openId);
         },
         methods: {
+            clickShowBig(url) {
+              this.bigImageUrl = url;
+              this.showBigImage = true;
+            },
             init: function () {
 
               /**
@@ -90,7 +107,8 @@
                   let data = response.data;
 
                 if (data.hasOwnProperty('code')) {
-                  that.$toast('网络忙，请稍后再试！');
+                  that.$toast('网络忙，请刷新重试！');
+                  that.list = [];
                   return false;
                 }
 
@@ -98,13 +116,17 @@
                     let ttl = data.ttl * 1000;
                     that.$store.commit('setActiveTime', ttl);
                     that.list = data.items;
+                    // console.log(data.items[0]);
+
+                    // that.list.push(data.items[0]);
+                    // that.list.push(data.items[0]);               
                     that.$store.commit('setCid', that.list[0].campaign_id);
                   }
 
                   return false;
               }).catch(e => {
                 console.log(e);
-                that.$toast('网络繁忙,请稍后再试~');
+                // that.$toast('网络繁忙,请稍后再试~');
               });
 
             },
@@ -150,7 +172,6 @@
                 return false;
               }
 
-              console.log(id);
               // 跳转到个人页面
               this.$router.push({
                 name: "Vote",
@@ -167,7 +188,7 @@
   .container{
     width: 100%;
     position: relative;
-    padding-bottom: 100px;
+    padding-bottom: 180px;
   }
 
   .u-search{
@@ -217,5 +238,19 @@
 
   .no-joiner{
     padding-top: 60px;
+    width:600px;
+    margin:0 auto;
   }
+
+
+  .item-image-container{
+    width:301px;
+    height: 254px;
+  }
+
+
+  .big-img img{
+    max-width:580px;
+  }
+
 </style>

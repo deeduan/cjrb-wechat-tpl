@@ -11,8 +11,8 @@
               v-for="(item, index) in list"
               v-bind:class="[(new Set([0,1,2])).has(index) ? 'number-'+index : '']"
           >
-            <div class="range-base"><span>{{ index+ 1}}</span><span>{{item.name}}</span></div>
-            <div class="range-tickets">{{item.upvote}}<span>票</span></div>
+            <div class="range-base"><span>{{ index+ 1}}</span><span>{{item.name}}窗口</span></div>
+            <div class="range-tickets">{{item.upvotes}}<span>票</span></div>
           </li>
         </ul>
       </div>
@@ -25,7 +25,6 @@
 import PublicHeader from "@/components/PublicHeader";
 import BottomNav from "@/components/BottomNav";
 import {range} from "@/api";
-import default_goods_img from "@/assets/rw.jpeg";
 
 export default {
   name: "Range",
@@ -68,7 +67,7 @@ export default {
 <style scoped>
 
   .range-container{
-    padding-bottom: 100px;
+    padding-bottom: 160px;
   }
   ul{
     padding: 20px;

@@ -86,11 +86,11 @@ export function search(requestData) {
  * @returns {*}
  */
 export function vote(requestData, c_id) {
-    let data = stringify(requestData);
+    // let data = stringify(requestData);
     return request({
         url: '/item?ci='+c_id,
         method: 'post',
-        data
+        data: requestData
     })
 }
 
@@ -106,7 +106,7 @@ export function sms(requestData) {
     return request({
         url: '/verify/sms',
         method: 'post',
-        data
+        data: requestData
     })
 }
 
