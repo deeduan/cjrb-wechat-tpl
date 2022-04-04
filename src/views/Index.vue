@@ -244,8 +244,8 @@
 
 
   .item-image-container{
-    width:301px;
-    height: 254px;
+    width:282px;
+    height: 222px;
   }
 
 
