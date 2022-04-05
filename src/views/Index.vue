@@ -2,6 +2,10 @@
     <div class="container">
         <PublicHeader></PublicHeader>
 
+      <div class="vote-share" @click="init()">
+        刷新
+      </div>
+
         <div class="list-container">
           <van-dialog v-model="showBigImage" title=" ">
             <div class="big-img">
@@ -32,8 +36,7 @@
                 </div>
                 <div class="grid-item-bottom" @click="onVote(user.id)">
                   <div class="grid-item-bottom-info">
-                    <div>{{user.item_no}}号</div>
-                    <div>{{user.name}}窗口</div>
+                    <div class="u-name">{{user.name}}</div>
                   </div>
                   <div class="grid-item-bottom-button">
                     投票
@@ -69,7 +72,7 @@
         data() {
           return {
             value: '',
-            noteMsg:'请输入窗口编号',
+            noteMsg:'如"xx窗口",输入"x","xx"',
             // default_goods_img: default_goods_img,
             list: [],
             c_id:0,
@@ -92,7 +95,7 @@
               this.showBigImage = true;
             },
             init: function () {
-
+              this.value = '';
               /**
                * 测试mock 的
                */
@@ -101,6 +104,7 @@
                 //     console.log(response);
                 //     return false;
                 // });
+              let window_map = this.$store.state.windowMaps;
 
               let that = this;
               fInit().then(function (response) {
@@ -115,11 +119,16 @@
                   if (data.hasOwnProperty('ttl')) {
                     let ttl = data.ttl * 1000;
                     that.$store.commit('setActiveTime', ttl);
+
+                    for (let idx in data.items) {
+                      data.items[idx].name += "窗口"+window_map[idx];
+                    }
+
                     that.list = data.items;
                     // console.log(data.items[0]);
 
                     // that.list.push(data.items[0]);
-                    // that.list.push(data.items[0]);               
+                    // that.list.push(data.items[0]);
                     that.$store.commit('setCid', that.list[0].campaign_id);
                   }
 
@@ -132,16 +141,16 @@
             },
             onSearch() {
               if (this.value.length < 1) {
-                this.$toast('请输入窗口编号');
+                this.$toast('请输入窗口名称');
                 return;
               }
 
               // 检验输入是否为数字
-              let pattern = /^\d+$/;
-              if (!pattern.test(this.value)) {
-                this.$toast('格式不正确，请输入窗口编号！');
-                return;
-              }
+              // let pattern = /^\d+$/;
+              // if (!pattern.test(this.value)) {
+              //   this.$toast('格式不正确，请输入窗口编号！');
+              //   return;
+              // }
 
               let that = this;
               let requestData = {
@@ -152,12 +161,17 @@
               search(requestData).then(function (response) {
 
                 let data = response.data;
-                    
+
                 if (data.hasOwnProperty('code')) {
                   that.$toast('查不到结果，请重新搜索~');
                   return false;
                 }
 
+                let window_map = that.$store.state.windowMaps;
+
+                for (let idx in data) {
+                  data[idx].name += "窗口"+window_map[idx];
+                }
                 that.list = data;
 
                 return false;
@@ -214,7 +228,7 @@
   .grid-item-bottom-info{
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: center;
     padding: 8px;
     background-color: #FBF6F9;
   }
@@ -251,6 +265,25 @@
 
   .big-img img{
     max-width:580px;
+  }
+
+  .vote-share {
+    position: fixed;
+    top: 40px;
+    right: 10px;
+    z-index: 1000;
+    width: 80px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    font-size: 18px;
+    background-color: black;
+    opacity: 0.2;
+    color: white;
+  }
+
+  .u-name{
+    font-size: 21px;
   }
 
 </style>
