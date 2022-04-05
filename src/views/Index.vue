@@ -170,7 +170,8 @@
                 let window_map = that.$store.state.windowMaps;
 
                 for (let idx in data) {
-                  data[idx].name += "窗口"+window_map[idx];
+                  let map_idx = data[idx].item_no - 1;
+                  data[idx].name += "窗口"+window_map[map_idx];
                 }
                 that.list = data;
 
