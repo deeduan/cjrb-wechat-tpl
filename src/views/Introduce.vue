@@ -10,15 +10,14 @@
       </div>
 
         <div class="intro-info-2">
-          洪江市政务服务中心第一届“政务服务清廉窗口测评”
-          评选活动开始啦，请为你支持的窗口投票吧!
+          洪江市政务服务中心“政务服务清廉窗口测评”评选活动开始啦，请为你支持的窗口投票吧!
         </div>
         <div class="intro-info-3">
           <div class="intro-info-ruler-notice">
             投票说明
           </div>
           <div class="intro-info-ruler-item">
-            1、投票时间: 7月6日(周三) 00:00-7月22日 (周五)
+            1、投票时间: 7月11日(周一) 00:00-7月27日 (周三)
             24:00;
           </div>
           <div class="intro-info-ruler-item">
